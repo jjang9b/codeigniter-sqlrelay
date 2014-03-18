@@ -6,7 +6,6 @@ based on CodeIgniter v2.1.0
 
  Application/config/database.php
 
-
     	$db['dbsqlrelay']['hostname'] = 'hostname';
     	$db['dbsqlrelay']['port'] = 'portnumber';
     	$db['dbsqlrelay']['username'] = 'username';
@@ -15,25 +14,20 @@ based on CodeIgniter v2.1.0
     	$db['dbsqlrelay']['dbdriver'] = 'sqlrelay';
     	$db['dbsqlrelay']['dbcase'] = 'oci8';
 
-
 2. Sqlrelay Adapter Add
-
  System/database/driver/sqlrelay
 
-- Sqlrelay_driver.php
-- Sqlrelay_result.php
-- Sqlrelay_forge.php
-- Sqlrelay_utility.php
+	- Sqlrelay_driver.php
+	- Sqlrelay_result.php
+	- Sqlrelay_forge.php
+	- Sqlrelay_utility.php
 
-
-3. Bug? (because use sqlrelay)
+##### Bug? (because use sqlrelay)
 
  System/database/driver/oci8/oci8_driver.php
  
- 	`$_commit = "";`
- 	
-	`$escape_str ="";`
-
+ 	$_commit = "";
+	$escape_str ="";
 
 
 CodeIgniter Sqlrelay Adapter Function
@@ -43,6 +37,7 @@ CodeIgniter Sqlrelay Adapter Function
 1. common use
 
  http://codeigniter.com/user_guide/database/index.html
+ 
  use same codeigniter methods.
 
 2. function stored procedure()
