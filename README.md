@@ -13,7 +13,7 @@ based on CodeIgniter v2.1.0
     	$db['dbsqlrelay']['password'] = 'password';
     	$db['dbsqlrelay']['database'] = '';
     	$db['dbsqlrelay']['dbdriver'] = 'sqlrelay';
-    	$db['dbsqlrelay']['dbcase'] = 'oci8';`
+    	$db['dbsqlrelay']['dbcase'] = 'oci8';
 
 
 2. Sqlrelay Adapter Add
@@ -55,7 +55,7 @@ CodeIgniter Sqlrelay Adapter Function
 		);
 		
 		$query = $this->db->stored procedure($package, $procedure, $params);
-		foreach($query->result() as $row)				// return sqlrelay resource_id
+		foreach($query->result() as $row)			// return sqlrelay resource_id
 		{
 			echo $row->colname;
 		}
@@ -64,10 +64,10 @@ CodeIgniter Sqlrelay Adapter Function
 
 		$params = array(
 				array('name'=>':variable1','value'=>'value'),
-				array('name'=>':variable2','value'=>'<b>@out</b>')
+				array('name'=>':variable2','value'=>'@out')
 				);
 		$query = $this->db->stored procedure($package, $procedure, $params);
-		foreach($query as $k=>$v)</b>					// return common array
+		foreach($query as $k=>$v)				// return common array
 		{
 			echo "$k / $v";
 		}
