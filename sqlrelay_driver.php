@@ -34,6 +34,14 @@ class CI_DB_sqlrelay_driver extends CI_DB {
 	var $output_name = array();
 	var $output_result = array();
 
+	var $_random_keyword = ' RAND()';
+
+	// mysqli 드라이버 보고 참고해서 넣음.
+	var $_count_string = "SELECT COUNT(*) AS ";
+	var $_like_escape_str = '';
+	var $_like_escape_chr = '';
+	var $last_id = 0;
+
 	function __construct($params)
 	{
 		parent::__construct($params);
@@ -44,7 +52,8 @@ class CI_DB_sqlrelay_driver extends CI_DB {
 		{
 			eval('class CI_DB_each_driver extends '.$class_name.' 
 				  {
-        	      	function __construct($params) { parent::__construct($params); }
+					function __construct($params) { parent::__construct($params); }
+					function call_0($method){ return $this->$method(); }
             	    function call_1($method,$a){ return $this->$method($a); }
             	    function call_2($method,$a,$b){ return $this->$method($a,$b); }
             	    function call_3($method,$a,$b,$c){ return $this->$method($a,$b,$c); }
@@ -157,16 +166,19 @@ class CI_DB_sqlrelay_driver extends CI_DB {
 	 */
 
 	protected function _execute($sql)
-	{
+	{	
+		$this->last_id = 0;
 	    $this->get_cursor();
 		sqlrcur_lowerCaseColumnNames($this->curs_id);
 
 		if(!sqlrcur_sendQuery($this->curs_id,$sql)){
             $errstr = sqlrcur_errorMessage($this->curs_id);
             echo $errstr;
-        }
-		
-	
+		}
+		if(strpos($sql, 'INSERT') !== false){
+			$this->last_id = sqlrcon_getLastInsertId($this->conn_id);
+		}
+
         return $this->curs_id;
 	}
 
@@ -436,7 +448,8 @@ class CI_DB_sqlrelay_driver extends CI_DB {
 	public function insert_id()
 	{
 		// not supported in sqlrelay
-		return $this->display_error('db_unsupported_function');
+		// return $this->display_error('db_unsupported_function');
+		return $this->last_id;
 	}
 
 	// --------------------------------------------------------------------
@@ -454,7 +467,7 @@ class CI_DB_sqlrelay_driver extends CI_DB {
 
 	public function count_all($table = "")
 	{
-		$_count_string = $this->CI_sqlrelay_driver->_count_string;
+		$this->_count_string = $this->CI_sqlrelay_driver->_count_string;
 
         if ($table === "")
         {
@@ -532,7 +545,7 @@ class CI_DB_sqlrelay_driver extends CI_DB {
 	 * @return  string
 	 */
 
-	protected function _error_message()
+	public function _error_message()
 	{
 		return sqlrcur_errorMessage($this->curs_id);
 	}
@@ -546,7 +559,7 @@ class CI_DB_sqlrelay_driver extends CI_DB {
 	 * @return  integer
 	 */
 
-	protected function _error_number()
+	public function _error_number()
 	{
 		// not supported in sqlrelay, but return true;
 		return '';
@@ -603,7 +616,8 @@ class CI_DB_sqlrelay_driver extends CI_DB {
 
 	protected function _insert($table, $keys, $values)
 	{
-		return $this->CI_sqlrelay_driver->call_3('_insert', $table, $keys, $values);
+		$result = $this->CI_sqlrelay_driver->call_3('_insert', $table, $keys, $values);
+		return $result;
 	}
 
 	// --------------------------------------------------------------------
